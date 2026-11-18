@@ -21,6 +21,10 @@
 
 ---
 
+**Dépôt :** https://github.com/HanineKhemir/devsecops-tp3-container-security
+ · **TP2 :** https://github.com/HanineKhemir/devsecops-tp2-cicd
+ · **TP1 :** https://github.com/HanineKhemir/devsecops-tp1-sast-sca
+
 **Application :** VulnBank (Flask + SQLite), l'application corrigée au TP1 puis protégée par le pipeline du TP2.
 
 **Outils :** Docker, Trivy 0.76.2, kind (Kubernetes v1.36.1), Helm 4, Secrets Kubernetes + chiffrement etcd, Falco 0.45.2 (pilote modern eBPF)
