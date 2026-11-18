@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+*.db
+.venv/
+.pytest_cache/
+# Cle de chiffrement etcd : generee localement, JAMAIS commitee
+k8s/cluster/encryption/
+# Fichiers de secrets eventuels
+.env
+*.env
+secrets/

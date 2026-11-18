@@ -1,0 +1,26 @@
+=== Cible : pod vulnbank-f8f6cb7d4-fgfht (namespace vulnbank)
+
+=== 1. Attaque : kubectl exec -it ... -- sh  (TTY alloue)
+/app $ id
+uid=10001(app) gid=10001(app) groups=10001(app)
+/app $ ls -l /run/secrets/vulnbank/
+total 0
+lrwxrwxrwx    1 root     app             21 Nov 18 16:46 admin_password -> ..data/admin_password
+lrwxrwxrwx    1 root     app             20 Nov 18 16:46 rates_api_key -> ..data/rates_api_key
+lrwxrwxrwx    1 root     app             17 Nov 18 16:46 secret_key -> ..data/secret_key
+/app $ wc -c /run/secrets/vulnbank/admin_password
+24 /run/secrets/vulnbank/admin_password
+/app $ touch /app/vulnbank/backdoor.py
+touch: /app/vulnbank/backdoor.py: Read-only file system
+/app $ apk add curl
+sh: apk: not found
+/app $ exit
+command terminated with exit code 127
+
+=== 2. Alertes Falco pour ce pod (depuis 2026-11-18T16:46:20Z)
+16:46:20.936638184: Notice A shell was spawned in a container with an attached terminal | evt_type=execve user=<NA> user_uid=10001 user_loginuid=-1 process=sh proc_exepath=/bin/busybox parent=containerd-shim command=sh terminal=34816 exe_flags=EXE_LOWER_LAYER container_id=f404b3bf473a container_name=vulnbank container_image_repository=docker.io/library/import-2026-11-18 container_image_tag=2.0-hardened k8s_pod_name=vulnbank-f8f6cb7d4-fgfht k8s_ns_name=vulnbank
+16:46:22.896753102: Warning Processus inattendu dans VulnBank (process=id cmdline=id parent=sh user_uid=10001 terminal=34816 pod=vulnbank-f8f6cb7d4-fgfht ns=vulnbank) container_id=f404b3bf473a container_name=vulnbank container_image_repository=docker.io/library/import-2026-11-18 container_image_tag=2.0-hardened k8s_pod_name=vulnbank-f8f6cb7d4-fgfht k8s_ns_name=vulnbank
+16:46:22.899455893: Warning Processus inattendu dans VulnBank (process=ls cmdline=ls -l /run/secrets/vulnbank/ parent=sh user_uid=10001 terminal=34816 pod=vulnbank-f8f6cb7d4-fgfht ns=vulnbank) container_id=f404b3bf473a container_name=vulnbank container_image_repository=docker.io/library/import-2026-11-18 container_image_tag=2.0-hardened k8s_pod_name=vulnbank-f8f6cb7d4-fgfht k8s_ns_name=vulnbank
+16:46:22.901487768: Warning Processus inattendu dans VulnBank (process=wc cmdline=wc -c /run/secrets/vulnbank/admin_password parent=sh user_uid=10001 terminal=34816 pod=vulnbank-f8f6cb7d4-fgfht ns=vulnbank) container_id=f404b3bf473a container_name=vulnbank container_image_repository=docker.io/library/import-2026-11-18 container_image_tag=2.0-hardened k8s_pod_name=vulnbank-f8f6cb7d4-fgfht k8s_ns_name=vulnbank
+16:46:22.901710768: Critical Secret VulnBank lu par un processus inattendu (file=/run/secrets/vulnbank/admin_password process=wc cmdline=wc -c /run/secrets/vulnbank/admin_password user_uid=10001 pod=vulnbank-f8f6cb7d4-fgfht ns=vulnbank image=docker.io/library/import-2026-11-18:2.0-hardened) container_id=f404b3bf473a container_name=vulnbank container_image_repository=docker.io/library/import-2026-11-18 container_image_tag=2.0-hardened k8s_pod_name=vulnbank-f8f6cb7d4-fgfht k8s_ns_name=vulnbank
+16:46:22.903075602: Warning Processus inattendu dans VulnBank (process=touch cmdline=touch /app/vulnbank/backdoor.py parent=sh user_uid=10001 terminal=34816 pod=vulnbank-f8f6cb7d4-fgfht ns=vulnbank) container_id=f404b3bf473a container_name=vulnbank container_image_repository=docker.io/library/import-2026-11-18 container_image_tag=2.0-hardened k8s_pod_name=vulnbank-f8f6cb7d4-fgfht k8s_ns_name=vulnbank

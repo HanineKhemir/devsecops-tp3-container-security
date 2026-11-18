@@ -1,0 +1,23 @@
+$ trivy image --quiet --scanners vuln,secret vulnbank:2.0-hardened | head -9
+
+Report Summary
+
+┌──────────────────────────────────────────────────────────────────────────────────┬────────────┬─────────────────┬─────────┐
+│                                      Target                                      │    Type    │ Vulnerabilities │ Secrets │
+├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ vulnbank:2.0-hardened (alpine 3.24.4)                                            │   alpine   │        0        │    -    │
+├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ opt/venv/lib/python3.13/site-packages/PyYAML-6.0.2.dist-info/METADATA            │ python-pkg │        0        │    -    │
+
+$ trivy image --quiet --format json vulnbank:2.0-hardened | jq '[.Results[].Vulnerabilities // [] | length] | add'
+0
+
+$ trivy config --quiet Dockerfile | head -7
+
+Report Summary
+
+┌────────────┬────────────┬───────────────────┐
+│   Target   │    Type    │ Misconfigurations │
+├────────────┼────────────┼───────────────────┤
+│ Dockerfile │ dockerfile │         0         │
+

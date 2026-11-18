@@ -1,0 +1,27 @@
+$ kubectl get ns vulnbank --show-labels
+NAME       STATUS   AGE   LABELS
+vulnbank   Active   21m   kubernetes.io/metadata.name=vulnbank,pod-security.kubernetes.io/enforce-version=latest,pod-security.kubernetes.io/enforce=restricted,pod-security.kubernetes.io/warn=restricted
+
+$ kubectl -n vulnbank get deploy,pod,svc,secret,networkpolicy
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/vulnbank   1/1     1            1           21m
+
+NAME                           READY   STATUS    RESTARTS   AGE
+pod/vulnbank-f8f6cb7d4-fgfht   1/1     Running   0          12m
+
+NAME               TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+service/vulnbank   ClusterIP   10.96.138.112   <none>        80/TCP    21m
+
+NAME                      TYPE     DATA   AGE
+secret/vulnbank-secrets   Opaque   3      21m
+
+NAME                                       POD-SELECTOR   AGE
+networkpolicy.networking.k8s.io/vulnbank   app=vulnbank   21m
+
+$ kubectl -n falco get daemonset,pod
+NAME                   DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+daemonset.apps/falco   1         1         1       1            1           <none>          21m
+
+NAME              READY   STATUS    RESTARTS   AGE
+pod/falco-8jwl4   2/2     Running   0          12m
+

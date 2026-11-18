@@ -1,0 +1,7 @@
+Fenetre observee depuis 2026-11-18T16:46:04Z : redemarrage du deploiement (creation d'un nouveau pod) + trafic normal
+GET / -> 200
+GET /healthz -> 200
+GET /rates -> 200
+GET /accounts?owner=alice -> 200
+GET /export?account=alice -> 200
+Alertes Falco pour le namespace vulnbank : 0

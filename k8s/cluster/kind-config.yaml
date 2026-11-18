@@ -1,0 +1,25 @@
+# Cluster kind du TP3.
+# Ajout de securite : chiffrement des Secrets AU REPOS dans etcd (AES-CBC).
+# Sans cela, un Secret Kubernetes n'est que du base64 dans etcd : quiconque lit
+# etcd (ou une sauvegarde d'etcd) lit tous les mots de passe en clair.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    extraMounts:
+      - hostPath: ./k8s/cluster/encryption
+        containerPath: /etc/kubernetes/encryption
+        readOnly: true
+    kubeadmConfigPatches:
+      - |
+        kind: ClusterConfiguration
+        apiServer:
+          extraArgs:
+            - name: encryption-provider-config
+              value: /etc/kubernetes/encryption/encryption-config.yaml
+          extraVolumes:
+            - name: encryption
+              hostPath: /etc/kubernetes/encryption
+              mountPath: /etc/kubernetes/encryption
+              readOnly: true
+              pathType: DirectoryOrCreate

@@ -1,0 +1,9 @@
+# Compte de service dedie, SANS jeton monte et SANS aucun droit (aucun Role).
+# Le pod n'a aucune raison de parler a l'API Kubernetes : s'il est compromis,
+# l'attaquant ne peut pas lister les Secrets du namespace.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vulnbank
+  namespace: vulnbank
+automountServiceAccountToken: false

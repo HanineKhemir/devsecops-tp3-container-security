@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vulnbank
+  namespace: vulnbank
+  labels: {app: vulnbank}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: vulnbank}
+  template:
+    metadata:
+      labels: {app: vulnbank}
+    spec:
+      serviceAccountName: vulnbank
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001           # les fichiers du Secret appartiennent au groupe 10001
+        seccompProfile:
+          type: RuntimeDefault   # filtre des appels systeme par defaut du runtime
+      containers:
+        - name: vulnbank
+          image: vulnbank:2.0-hardened   # tag immuable, jamais :latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - {name: http, containerPort: 8000}
+          env:
+            # En production, un secret manquant = echec du demarrage (pas de repli).
+            - {name: REQUIRE_SECRETS, value: "1"}
+            - {name: SECRETS_DIR, value: /run/secrets/vulnbank}
+            # AUCUN secret en variable d'environnement : ils sont montes en fichiers.
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            privileged: false
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - {name: secrets, mountPath: /run/secrets/vulnbank, readOnly: true}
+            - {name: data, mountPath: /data}
+            - {name: tmp, mountPath: /tmp}
+          resources:
+            requests: {cpu: 50m, memory: 96Mi}
+            limits: {cpu: 500m, memory: 256Mi}
+          readinessProbe:
+            httpGet: {path: /healthz, port: http}
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: {path: /healthz, port: http}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      volumes:
+        - name: secrets
+          secret:
+            secretName: vulnbank-secrets
+            defaultMode: 0440    # lecture seule : proprietaire root + groupe 10001
+        - name: data
+          emptyDir: {sizeLimit: 50Mi}
+        - name: tmp
+          emptyDir: {medium: Memory, sizeLimit: 16Mi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vulnbank
+  namespace: vulnbank
+spec:
+  selector: {app: vulnbank}
+  ports:
+    - {name: http, port: 80, targetPort: http}

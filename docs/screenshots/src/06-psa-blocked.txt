@@ -1,0 +1,11 @@
+$ kubectl -n vulnbank run oldimage --image=vulnbank:1.0-before --dry-run=server
+Error from server (Forbidden): pods "oldimage" is forbidden: violates PodSecurity "restricted:latest": allowPrivilegeEscalation != false (container "oldimage" must set securityContext.allowPrivilegeEscalation=false), unrestricted capabilities (container "oldimage" must set securityContext.capabilities.drop=["ALL"]), runAsNonRoot != true (pod or container "oldimage" must set securityContext.runAsNonRoot=true), seccompProfile (pod or container "oldimage" must set securityContext.seccompProfile.type to "RuntimeDefault" or "Localhost")
+
+$ kubectl -n vulnbank get pod oldimage-root
+NAME            READY   STATUS                       RESTARTS   AGE
+oldimage-root   0/1     CreateContainerConfigError   0          8s
+
+$ kubectl -n vulnbank get events --field-selector involvedObject.name=oldimage-root
+TYPE      REASON      MESSAGE
+Normal    Scheduled   Successfully assigned vulnbank/oldimage-root to tp3-control-plane
+Warning   Failed      Error: container has runAsNonRoot and image will run as root (pod: "oldimage-root_vulnbank(d9f39d65-549d-4843-bd2c-678c152959c6)", container: app)

@@ -1,0 +1,19 @@
+$ docker image ls vulnbank --format 'table {{.Repository}}:{{.Tag}}\t{{.Size}}'
+REPOSITORY:TAG          SIZE
+vulnbank:2.0-hardened   70.4MB
+vulnbank:1.0-before     172MB
+
+$ docker run --rm vulnbank:1.0-before id
+uid=0(root) gid=0(root) groups=0(root)
+
+$ docker run --rm vulnbank:2.0-hardened id
+uid=10001(app) gid=10001(app) groups=10001(app)
+
+$ docker run --rm vulnbank:2.0-hardened sh -c 'command -v pip apk || echo "pip et apk : absents"'
+pip et apk : absents
+
+$ docker run --rm -e REQUIRE_SECRETS=1 --read-only --tmpfs /tmp --tmpfs /data:uid=10001 vulnbank:2.0-hardened | grep Error
+
+Error: secret manquant : secret_key
+
+

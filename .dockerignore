@@ -1,0 +1,20 @@
+# Ne jamais envoyer au contexte de build : secrets, VCS, environnements locaux,
+# bases de donnees, rapports, tests, manifestes.
+.git
+.gitignore
+.venv
+**/__pycache__
+**/*.pyc
+*.db
+.env
+*.env
+secrets/
+k8s/
+evidence/
+reports/
+tests/
+docs/
+scripts/
+before/
+*.md
+*.pdf

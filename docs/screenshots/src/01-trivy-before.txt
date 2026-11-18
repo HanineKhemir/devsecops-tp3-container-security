@@ -1,0 +1,30 @@
+$ trivy image --scanners vuln,secret vulnbank:1.0-before
+vulnbank:1.0-before (debian 13.7)
+=================================
+Total: 226 (UNKNOWN: 20, LOW: 65, MEDIUM: 93, HIGH: 48, CRITICAL: 0)
+[... 226 lignes de vulnerabilites Debian omises ...]
+
+
+Python (python-pkg)
+===================
+Total: 10 (UNKNOWN: 0, LOW: 2, MEDIUM: 6, HIGH: 2, CRITICAL: 0)
+
+┌───────────────────────────┬─────────────────────┬──────────┬────────┬───────────────────┬───────────────┬──────────────────────────────────────────────────────────────┐
+│          Library          │    Vulnerability    │ Severity │ Status │ Installed Version │ Fixed Version │                            Title                             │
+├───────────────────────────┼─────────────────────┼──────────┼────────┼───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ jaraco.context (METADATA) │ CVE-2026-23949      │ HIGH     │ fixed  │ 5.3.0             │ 6.1.0         │ jaraco.context: jaraco.context: Path traversal via malicious │
+│                           │                     │          │        │                   │               │ tar archives                                                 │
+│                           │                     │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-23949                   │
+├───────────────────────────┼─────────────────────┼──────────┤        ├───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ pip (METADATA)            │ CVE-2025-8869       │ MEDIUM   │        │ 24.0              │ 25.3          │ pip: pip missing checks on symbolic link extraction          │
+│                           │                     │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2025-8869                    │
+│                           ├─────────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│                           │ CVE-2026-13346      │          │        │                   │ 26.2.0        │ pip: pip: Arbitrary file installation via malicious package  │
+│                           │                     │          │        │                   │               │ indexes                                                      │
+[...]
+
+$ trivy config --quiet before/Dockerfile | grep -E 'Tests:|Failures:|DS-0002'
+Tests: 27 (SUCCESSES: 26, FAILURES: 1)
+Failures: 1 (UNKNOWN: 0, LOW: 0, MEDIUM: 0, HIGH: 1, CRITICAL: 0)
+DS-0002 (HIGH): Specify at least 1 USER command in Dockerfile with non-root user as argument
+

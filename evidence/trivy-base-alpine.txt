@@ -1,0 +1,2 @@
+python:3.13-alpine@sha256:9ef1a599f863231c3d91e941389bfdc4a2 {'MEDIUM': 1} ['zlib']
+Python {'HIGH': 5, 'MEDIUM': 2, 'LOW': 1} ['msgpack', 'setuptools', 'urllib3']

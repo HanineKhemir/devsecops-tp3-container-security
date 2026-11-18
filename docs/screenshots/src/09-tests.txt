@@ -1,0 +1,9 @@
+$ .venv/bin/pytest -q -p no:cacheprovider | tail -4
+tests/test_app.py ..............                                         [ 77%]
+tests/test_secrets.py ....                                               [100%]
+
+============================== 18 passed in 3.05s ==============================
+
+$ .venv/bin/bandit -q -r vulnbank && echo 'Bandit : aucun probleme'
+Bandit : aucun probleme
+

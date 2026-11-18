@@ -1,0 +1,16 @@
+# Par defaut tout est refuse ; seuls sont autorises :
+#  - en entree : le trafic HTTP vers le port 8000 ;
+#  - en sortie : DNS et HTTPS (appel a l'API de taux de change).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: vulnbank
+  namespace: vulnbank
+spec:
+  podSelector: {matchLabels: {app: vulnbank}}
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - ports: [{port: 8000, protocol: TCP}]
+  egress:
+    - ports: [{port: 53, protocol: UDP}, {port: 53, protocol: TCP}]
+    - ports: [{port: 443, protocol: TCP}]

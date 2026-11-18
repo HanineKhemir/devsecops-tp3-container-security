@@ -1,0 +1,16 @@
+$ kubectl -n vulnbank exec -it vulnbank-f8f6cb7d4-fgfht -- sh
+/app $ id
+uid=10001(app) gid=10001(app) groups=10001(app)
+/app $ ls -l /run/secrets/vulnbank/
+total 0
+lrwxrwxrwx    1 root     app             21 Nov 18 16:46 admin_password -> ..data/admin_password
+lrwxrwxrwx    1 root     app             20 Nov 18 16:46 rates_api_key -> ..data/rates_api_key
+lrwxrwxrwx    1 root     app             17 Nov 18 16:46 secret_key -> ..data/secret_key
+/app $ wc -c /run/secrets/vulnbank/admin_password
+24 /run/secrets/vulnbank/admin_password
+/app $ touch /app/vulnbank/backdoor.py
+touch: /app/vulnbank/backdoor.py: Read-only file system
+/app $ apk add curl
+sh: apk: not found
+/app $ exit
+command terminated with exit code 127
